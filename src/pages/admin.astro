@@ -1,0 +1,8 @@
+---
+import AdminInterface from '../components/AdminInterface.jsx';
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Admin Dashboard - The Daily Pulse">
+	<AdminInterface client:only="react" />
+</Layout>
