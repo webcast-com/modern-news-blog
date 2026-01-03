@@ -49,13 +49,6 @@ export default function NewsBlog() {
               placeholder="Search headlines, authors, excerpts..."
             />
             <button onClick={() => { setQuery(''); setCategory('All'); }} className="text-sm text-gray-600 hover:text-gray-900">Clear</button>
-            <a
-              href="/sports"
-              className="inline-flex items-center gap-2 rounded-md border border-indigo-200 bg-indigo-50 px-3 py-2 text-sm font-medium text-indigo-700 transition hover:border-indigo-300 hover:bg-indigo-100"
-            >
-              Sky Sports Live
-              <span aria-hidden="true">↗</span>
-            </a>
           </div>
         </div>
       </header>
