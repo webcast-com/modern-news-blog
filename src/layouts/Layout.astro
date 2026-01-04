@@ -20,6 +20,49 @@ const { title = "The Daily Pulse" } = Astro.props;
 	</head>
 	<body>
 		<slot />
+		{import.meta.env.DEV && (
+			<script is:inline>
+				(() => {
+					if (typeof window === "undefined" || !window.customElements) {
+						return;
+					}
+					const applyPatch = () => {
+						const Toolbar = window.customElements.get("astro-dev-toolbar");
+						if (!Toolbar || Toolbar.prototype.__builderPatched) {
+							return;
+						}
+						const originalInit = Toolbar.prototype.init;
+						const originalGetAppTemplate = Toolbar.prototype.getAppTemplate;
+						Toolbar.prototype.init = function (...args) {
+							if (Array.isArray(this.apps)) {
+								this.apps = this.apps.filter(
+									(app) => app && typeof app.id === "string"
+								);
+							} else {
+								this.apps = [];
+							}
+							return originalInit.apply(this, args);
+						};
+						Toolbar.prototype.getAppTemplate = function (app) {
+							if (!app || typeof app.id !== "string") {
+								console.warn("[astro-dev-toolbar] Skipping app with invalid metadata.", app);
+								return "";
+							}
+							return originalGetAppTemplate.call(this, app);
+						};
+						Toolbar.prototype.__builderPatched = true;
+					};
+					if (window.customElements.get("astro-dev-toolbar")) {
+						applyPatch();
+					} else if (window.customElements.whenDefined) {
+						window.customElements
+							.whenDefined("astro-dev-toolbar")
+							.then(applyPatch)
+							.catch(() => {});
+					}
+				})();
+			</script>
+		)}
 	</body>
 </html>
 
